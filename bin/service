@@ -1,0 +1,71 @@
+#!/bin/bash
+
+USER_LAUNCHAGENTS_DIR="$HOME/Library/LaunchAgents"
+ALL_LAUNCHAGENTS_DIR="/Library/LaunchAgents"
+ALL_LAUNCHDAEMONS_DIR="/Library/LaunchDaemons"
+
+SERVICE=$1
+CMD=$2
+
+FILE_PATHS=`find $USER_LAUNCHAGENTS_DIR $ALL_LAUNCHAGENTS_DIR $ALL_LAUNCHDAEMONS_DIR -type f -print`
+LINK_PATHS=`find $USER_LAUNCHAGENTS_DIR $ALL_LAUNCHAGENTS_DIR $ALL_LAUNCHDAEMONS_DIR -type l -print`
+SERVICES=`echo -e "${FILE_PATHS}\n${LINK_PATHS}"`
+
+if [ $SERVICE == "list" ]; then
+  echo "Services:"
+  echo "$SERVICES"
+  exit 1
+elif [ $# -ne 2 ]; then
+  echo "Usage: $0 <plist name> <command>"
+  echo "ex."
+  echo "  service mongodb start"
+  echo "  service homebrew.mxcl.mongodb stop"
+  echo "  service homebrew.mxcl.mongodb.plist stop"
+  exit 1
+fi
+
+RESULT=`echo "$SERVICES" | grep $SERVICE`
+
+LINE_COUNT=`echo "$RESULT" | grep "."| wc -l | tr -d " "`
+
+if [ $LINE_COUNT -eq 0 ]; then
+	echo "Service not found: ${SERVICE}" 
+	exit 2
+fi
+
+if [ $LINE_COUNT -ne 1 ]; then
+	echo "Ambiguous service name! ${SERVICE} " 
+	echo "Matched services:"
+	echo "$RESULT"
+	exit 3
+fi
+
+case "$CMD" in
+	"start")
+		echo "launchctl load $RESULT"
+		launchctl load $RESULT
+		;;
+	"stop")
+		echo "launchctl unload $RESULT"
+		launchctl unload $RESULT
+		;;
+	"restart")
+		echo "launchctl unload $RESULT"
+		launchctl unload $RESULT
+		echo "launchctl load $RESULT"
+		launchctl load $RESULT
+		;;
+	"enable")
+		echo "launchctl load -w $RESULT"
+		launchctl load -w $RESULT
+		;;
+	"disable")
+		echo "launchctl unload -w $RESULT"
+		launchctl unload -w $RESULT
+		;;
+	*)
+		echo "Usage: $0 $SERVICE [start|stop|restart|enable|disable]"
+		exit 1
+		;;
+esac
+
