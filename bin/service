@@ -11,7 +11,7 @@ FILE_PATHS=`find $USER_LAUNCHAGENTS_DIR $ALL_LAUNCHAGENTS_DIR $ALL_LAUNCHDAEMONS
 LINK_PATHS=`find $USER_LAUNCHAGENTS_DIR $ALL_LAUNCHAGENTS_DIR $ALL_LAUNCHDAEMONS_DIR -type l -print`
 SERVICES=`echo -e "${FILE_PATHS}\n${LINK_PATHS}"`
 
-if [ $SERVICE == "list" ]; then
+if [ $# -eq 1 ] && [ $SERVICE == "list" ]; then
   echo "Services:"
   echo "$SERVICES"
   exit 1

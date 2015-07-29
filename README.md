@@ -1,35 +1,42 @@
 # What is this?
-It provide `service` command for OSX
+It provides linux like `service` command for OSX
 
 # Install
-```
+
+```bash
 git clone https://github.com/nobutakaoshiro/osx-service-cmd
 cd osx-service-cmd
-cp bin/service /usr/local/bin/service
-# or
-ln -s <osx-service-cmd dir>/bin/service /usr/local/bin/service
-```
 
-```
+# Install 'service' command to /usr/local/bin
+./install.sh
+
+# Add /usr/local/bin to $PATH if you needed
 # ~/.bash_profile
 export PATH=/usr/local/bin:$PATH
 ```
 
 # Usage
-```
-service <plist name> <command>
+
+```bash
+# command: [start|stop|restart|enable|disable]
+service <plist_name> <command>
+
+# show LaunchAgents/LaunchDaemons list
+service list
 ```
 
 # Example
-```
-# if exists "~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist" then
+
+```bash
+# if "~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist" exists
 service mongodb start
-service homebrew.mxcl.mongodb stop
-service homebrew.mxcl.mongodb.plist stop
+service homebrew.mxcl.mongodb start
+service homebrew.mxcl.mongodb.plist start
 ```
 
 # Uninstall
-```
+
+```bash
 rm /usr/local/bin/service
 ```
 
