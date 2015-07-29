@@ -4,7 +4,7 @@ It provides linux like `service` command for OSX
 # Install
 
 ```bash
-git clone https://github.com/nobutakaoshiro/osx-service-cmd
+git clone https://github.com/nobutakaoshiro/osx-service-cmd.git
 cd osx-service-cmd
 
 # Install 'service' command to /usr/local/bin
